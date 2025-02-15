@@ -1,4 +1,3 @@
-
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
@@ -12,19 +11,28 @@ import {
 } from "recharts";
 import { Users, MousePointer, PhoneCall, Mail } from "lucide-react";
 
-interface AnalyticsData {
-  date: string;
-  visitors: number;
-  details: number;
-  calls: number;
-}
-
-const mockData: AnalyticsData[] = Array.from({ length: 7 }, (_, i) => ({
-  date: new Date(Date.now() - (6 - i) * 24 * 60 * 60 * 1000).toLocaleDateString(),
-  visitors: Math.floor(Math.random() * 100) + 50,
-  details: Math.floor(Math.random() * 30) + 10,
-  calls: Math.floor(Math.random() * 15) + 5,
-}));
+// Функция для получения данных за последние 7 дней
+const getLastWeekData = () => {
+  const data = [];
+  for (let i = 6; i >= 0; i--) {
+    const date = new Date();
+    date.setDate(date.getDate() - i);
+    const dateStr = date.toLocaleDateString();
+    
+    // Получаем данные из localStorage для каждого дня
+    const visitorKey = `visitors_${dateStr}`;
+    const detailsKey = `details_${dateStr}`;
+    const callsKey = `calls_${dateStr}`;
+    
+    data.push({
+      date: dateStr,
+      visitors: parseInt(localStorage.getItem(visitorKey) || "0"),
+      details: parseInt(localStorage.getItem(detailsKey) || "0"),
+      calls: parseInt(localStorage.getItem(callsKey) || "0"),
+    });
+  }
+  return data;
+};
 
 const StatCard = ({ title, value, icon: Icon, description }: {
   title: string;
@@ -54,20 +62,30 @@ const Analytics = () => {
   const [contactRequests, setContactRequests] = useState(() => 
     parseInt(localStorage.getItem("contactRequests") || "0")
   );
+  const [chartData, setChartData] = useState(getLastWeekData());
 
   useEffect(() => {
-    // Increment visitors count on page load
+    // Сохраняем посещение для текущего дня
+    const today = new Date().toLocaleDateString();
+    const visitorKey = `visitors_${today}`;
+    const currentDayVisitors = parseInt(localStorage.getItem(visitorKey) || "0");
+    localStorage.setItem(visitorKey, (currentDayVisitors + 1).toString());
+    
+    // Обновляем общее количество посещений
     const newVisitorsCount = totalVisitors + 1;
     setTotalVisitors(newVisitorsCount);
     localStorage.setItem("totalVisitors", newVisitorsCount.toString());
+    
+    // Обновляем данные графика
+    setChartData(getLastWeekData());
   }, []);
 
   return (
-    <div className="min-h-screen bg-gray-50 p-6">
+    <div className="min-h-screen bg-green-50 p-6">
       <div className="max-w-7xl mx-auto space-y-8">
         <div>
-          <h1 className="text-3xl font-bold">Аналитика MastService</h1>
-          <p className="text-muted-foreground">Статистика посещений и конверсий</p>
+          <h1 className="text-3xl font-bold text-green-800">Аналитика MastService</h1>
+          <p className="text-green-600">Статистика посещений и конверсий</p>
         </div>
 
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
@@ -99,12 +117,12 @@ const Analytics = () => {
 
         <Card className="p-6">
           <CardHeader>
-            <CardTitle>Динамика посещений</CardTitle>
+            <CardTitle className="text-green-800">Динамика посещений</CardTitle>
           </CardHeader>
           <CardContent>
             <div className="h-[400px] mt-4">
               <ResponsiveContainer width="100%" height="100%">
-                <LineChart data={mockData}>
+                <LineChart data={chartData}>
                   <CartesianGrid strokeDasharray="3 3" />
                   <XAxis dataKey="date" />
                   <YAxis />
@@ -112,19 +130,19 @@ const Analytics = () => {
                   <Line 
                     type="monotone" 
                     dataKey="visitors" 
-                    stroke="#8884d8" 
+                    stroke="#059669" 
                     name="Посетители"
                   />
                   <Line 
                     type="monotone" 
                     dataKey="details" 
-                    stroke="#82ca9d" 
+                    stroke="#065f46" 
                     name="Клики 'Подробнее'"
                   />
                   <Line 
                     type="monotone" 
                     dataKey="calls" 
-                    stroke="#ffc658" 
+                    stroke="#047857" 
                     name="Заявки"
                   />
                 </LineChart>
