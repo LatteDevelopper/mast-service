@@ -11,12 +11,19 @@ export const Header = () => {
     }
   };
 
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <header className="sticky top-0 z-50 w-full border-b bg-background/95 backdrop-blur supports-[backdrop-filter]:bg-background/60">
       <div className="container flex h-16 items-center justify-between">
-        <Link to="/" className="flex items-center gap-2 text-lg font-bold text-green-700">
-          <span>MastService</span>
-        </Link>
+        <button 
+          onClick={scrollToTop} 
+          className="text-lg font-medium text-green-700 hover:text-green-600 transition-colors"
+        >
+          MastService
+        </button>
         
         <nav className="hidden md:flex items-center gap-6">
           <button 

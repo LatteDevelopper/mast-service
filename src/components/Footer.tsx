@@ -2,12 +2,28 @@
 import { Instagram, Mail, Phone } from "lucide-react";
 
 export const Footer = () => {
+  const scrollToSection = (sectionId: string) => {
+    const element = document.getElementById(sectionId);
+    if (element) {
+      element.scrollIntoView({ behavior: "smooth" });
+    }
+  };
+
+  const scrollToTop = () => {
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   return (
     <footer className="bg-green-900 text-white rounded-t-3xl">
       <div className="container mx-auto py-12 px-4">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div>
-            <h3 className="text-lg font-bold mb-4">MastService</h3>
+            <button 
+              onClick={scrollToTop}
+              className="text-lg font-bold mb-4 hover:text-green-100 transition-colors"
+            >
+              MastService
+            </button>
             <p className="text-green-100 text-sm">
               Профессиональный ремонт и отделка помещений в Новосибирске с гарантией качества
             </p>
