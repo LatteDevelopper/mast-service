@@ -14,7 +14,6 @@ export const ContactForm = () => {
     e.preventDefault();
     setLoading(true);
 
-    // Here we would typically send this data to a backend
     const formData = new FormData(e.currentTarget);
     const lead = {
       name: formData.get("name"),
@@ -23,6 +22,10 @@ export const ContactForm = () => {
       message: formData.get("message"),
       timestamp: new Date().toISOString(),
     };
+
+    // Track contact request
+    const currentRequests = parseInt(localStorage.getItem("contactRequests") || "0");
+    localStorage.setItem("contactRequests", (currentRequests + 1).toString());
 
     // For now, we'll just log the lead data
     console.log("New lead:", lead);
@@ -40,7 +43,7 @@ export const ContactForm = () => {
   };
 
   return (
-    <section className="section-padding" id="contact">
+    <section className="section-padding bg-gray-50" id="contact">
       <Card className="max-w-xl mx-auto">
         <CardHeader className="text-center">
           <CardTitle className="text-2xl font-bold">Оставить заявку</CardTitle>
