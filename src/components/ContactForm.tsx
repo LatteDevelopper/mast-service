@@ -27,8 +27,17 @@ export const ContactForm = () => {
     const currentRequests = parseInt(localStorage.getItem("contactRequests") || "0");
     localStorage.setItem("contactRequests", (currentRequests + 1).toString());
 
-    // For now, we'll just log the lead data
-    console.log("New lead:", lead);
+    // Save lead data
+    const savedLeads = localStorage.getItem("leads");
+    const leads = savedLeads ? JSON.parse(savedLeads) : [];
+    leads.push(lead);
+    localStorage.setItem("leads", JSON.stringify(leads));
+
+    // Track for current day
+    const today = new Date().toLocaleDateString();
+    const callsKey = `calls_${today}`;
+    const currentDayCalls = parseInt(localStorage.getItem(callsKey) || "0");
+    localStorage.setItem(callsKey, (currentDayCalls + 1).toString());
     
     // Simulate API call
     await new Promise(resolve => setTimeout(resolve, 1000));
@@ -43,11 +52,11 @@ export const ContactForm = () => {
   };
 
   return (
-    <section className="section-padding bg-gray-50" id="contact">
-      <Card className="max-w-xl mx-auto">
+    <section className="section-padding bg-gradient-to-b from-green-50 to-white" id="contact">
+      <Card className="max-w-xl mx-auto rounded-2xl shadow-lg hover:shadow-xl transition-shadow">
         <CardHeader className="text-center">
-          <CardTitle className="text-2xl font-bold">Оставить заявку</CardTitle>
-          <CardDescription>
+          <CardTitle className="text-2xl font-bold text-green-800">Оставить заявку</CardTitle>
+          <CardDescription className="text-green-600">
             Заполните форму, и мы свяжемся с вами для консультации
           </CardDescription>
         </CardHeader>
@@ -58,7 +67,7 @@ export const ContactForm = () => {
                 name="name"
                 placeholder="Ваше имя"
                 required
-                className="transition-all"
+                className="rounded-xl transition-all focus:ring-green-500"
               />
             </div>
             <div className="space-y-2">
@@ -67,7 +76,7 @@ export const ContactForm = () => {
                 type="tel"
                 placeholder="Телефон"
                 required
-                className="transition-all"
+                className="rounded-xl transition-all focus:ring-green-500"
               />
             </div>
             <div className="space-y-2">
@@ -75,17 +84,21 @@ export const ContactForm = () => {
                 name="email"
                 type="email"
                 placeholder="Email"
-                className="transition-all"
+                className="rounded-xl transition-all focus:ring-green-500"
               />
             </div>
             <div className="space-y-2">
               <Textarea
                 name="message"
                 placeholder="Ваше сообщение"
-                className="min-h-[100px] transition-all"
+                className="min-h-[100px] rounded-xl transition-all focus:ring-green-500"
               />
             </div>
-            <Button type="submit" className="w-full" disabled={loading}>
+            <Button 
+              type="submit" 
+              className="w-full rounded-xl bg-green-600 hover:bg-green-700 transition-colors" 
+              disabled={loading}
+            >
               {loading ? "Отправка..." : "Отправить заявку"}
             </Button>
           </form>

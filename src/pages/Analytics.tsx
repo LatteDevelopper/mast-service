@@ -52,6 +52,14 @@ const StatCard = ({ title, value, icon: Icon, description }: {
   </Card>
 );
 
+interface Lead {
+  name: string;
+  phone: string;
+  email: string;
+  message: string;
+  timestamp: string;
+}
+
 const Analytics = () => {
   const [totalVisitors, setTotalVisitors] = useState(() => 
     parseInt(localStorage.getItem("totalVisitors") || "0")
@@ -63,6 +71,11 @@ const Analytics = () => {
     parseInt(localStorage.getItem("contactRequests") || "0")
   );
   const [chartData, setChartData] = useState(getLastWeekData());
+  
+  const [leads, setLeads] = useState<Lead[]>(() => {
+    const savedLeads = localStorage.getItem("leads");
+    return savedLeads ? JSON.parse(savedLeads) : [];
+  });
 
   useEffect(() => {
     // Сохраняем посещение для текущего дня
@@ -147,6 +160,38 @@ const Analytics = () => {
                   />
                 </LineChart>
               </ResponsiveContainer>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle className="text-green-800">Заявки пользователей</CardTitle>
+          </CardHeader>
+          <CardContent>
+            <div className="overflow-x-auto">
+              <table className="w-full">
+                <thead>
+                  <tr className="border-b">
+                    <th className="text-left p-4">Дата</th>
+                    <th className="text-left p-4">Имя</th>
+                    <th className="text-left p-4">Телефон</th>
+                    <th className="text-left p-4">Email</th>
+                    <th className="text-left p-4">Сообщение</th>
+                  </tr>
+                </thead>
+                <tbody>
+                  {leads.map((lead, index) => (
+                    <tr key={index} className="border-b hover:bg-green-50">
+                      <td className="p-4">{new Date(lead.timestamp).toLocaleDateString()}</td>
+                      <td className="p-4">{lead.name}</td>
+                      <td className="p-4">{lead.phone}</td>
+                      <td className="p-4">{lead.email || "-"}</td>
+                      <td className="p-4">{lead.message}</td>
+                    </tr>
+                  ))}
+                </tbody>
+              </table>
             </div>
           </CardContent>
         </Card>

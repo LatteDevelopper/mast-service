@@ -1,11 +1,11 @@
 
-import { Facebook, Instagram, Mail, MapPin, Phone } from "lucide-react";
+import { Instagram, Mail, Phone } from "lucide-react";
 
 export const Footer = () => {
   return (
-    <footer className="bg-green-900 text-white">
+    <footer className="bg-green-900 text-white rounded-t-3xl">
       <div className="container mx-auto py-12 px-4">
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-8">
           <div>
             <h3 className="text-lg font-bold mb-4">MastService</h3>
             <p className="text-green-100 text-sm">
@@ -16,39 +16,28 @@ export const Footer = () => {
           <div>
             <h3 className="text-lg font-bold mb-4">Контакты</h3>
             <div className="space-y-3">
-              <a href="tel:+73833214455" className="flex items-center gap-2 text-green-100 hover:text-white">
+              <a href="tel:+79529000370" className="flex items-center gap-2 text-green-100 hover:text-white transition-colors">
                 <Phone size={18} />
-                <span>+7 (383) 321-44-55</span>
+                <span>+7 (952) 900 03-70</span>
               </a>
-              <a href="mailto:info@mastservice.ru" className="flex items-center gap-2 text-green-100 hover:text-white">
+              <a href="mailto:info@mastservice.ru" className="flex items-center gap-2 text-green-100 hover:text-white transition-colors">
                 <Mail size={18} />
                 <span>info@mastservice.ru</span>
               </a>
-              <div className="flex items-center gap-2 text-green-100">
-                <MapPin size={18} />
-                <span>г. Новосибирск, ул. Ленина, 1</span>
-              </div>
             </div>
-          </div>
-          
-          <div>
-            <h3 className="text-lg font-bold mb-4">Услуги</h3>
-            <ul className="space-y-2 text-green-100">
-              <li><a href="#" className="hover:text-white">Ремонт квартир</a></li>
-              <li><a href="#" className="hover:text-white">Отделочные работы</a></li>
-              <li><a href="#" className="hover:text-white">Ремонт офисов</a></li>
-              <li><a href="#" className="hover:text-white">Дизайн интерьера</a></li>
-            </ul>
           </div>
           
           <div>
             <h3 className="text-lg font-bold mb-4">Мы в соцсетях</h3>
             <div className="flex gap-4">
-              <a href="#" className="text-green-100 hover:text-white">
+              <a 
+                href="https://instagram.com/mast.service" 
+                target="_blank" 
+                rel="noopener noreferrer" 
+                className="text-green-100 hover:text-white transition-colors flex items-center gap-2"
+              >
                 <Instagram size={24} />
-              </a>
-              <a href="#" className="text-green-100 hover:text-white">
-                <Facebook size={24} />
+                <span>@mast.service</span>
               </a>
             </div>
           </div>
