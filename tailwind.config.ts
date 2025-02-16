@@ -26,24 +26,26 @@ export default {
         background: "hsl(var(--background))",
         foreground: "hsl(var(--foreground))",
         primary: {
-          DEFAULT: "#059669",
-          foreground: "#ffffff",
+          DEFAULT: "#4A5568",
+          foreground: "#F7FAFC",
+          light: "#A0AEC0",
+          dark: "#2D3748",
         },
         secondary: {
-          DEFAULT: "#f0fdf4",
-          foreground: "#065f46",
+          DEFAULT: "#EDF2F7",
+          foreground: "#4A5568",
         },
         destructive: {
           DEFAULT: "hsl(var(--destructive))",
           foreground: "hsl(var(--destructive-foreground))",
         },
         muted: {
-          DEFAULT: "#f0fdf4",
-          foreground: "#065f46",
+          DEFAULT: "#EDF2F7",
+          foreground: "#4A5568",
         },
         accent: {
-          DEFAULT: "#dcfce7",
-          foreground: "#065f46",
+          DEFAULT: "#F7FAFC",
+          foreground: "#4A5568",
         },
         popover: {
           DEFAULT: "hsl(var(--popover))",
@@ -68,36 +70,10 @@ export default {
           from: { height: "var(--radix-accordion-content-height)" },
           to: { height: "0" },
         },
-        fadeIn: {
-          from: { opacity: "0" },
-          to: { opacity: "1" },
-        },
-        slideIn: {
-          from: { transform: "translateY(1rem)", opacity: "0" },
-          to: { transform: "translateY(0)", opacity: "1" },
-        },
-        pulse: {
-          "0%, 100%": { opacity: "1" },
-          "50%": { opacity: "0.5" },
-        },
-        bounce: {
-          "0%, 100%": {
-            transform: "translateY(-25%)",
-            animationTimingFunction: "cubic-bezier(0.8,0,1,1)",
-          },
-          "50%": {
-            transform: "none",
-            animationTimingFunction: "cubic-bezier(0,0,0.2,1)",
-          },
-        },
       },
       animation: {
         "accordion-down": "accordion-down 0.2s ease-out",
         "accordion-up": "accordion-up 0.2s ease-out",
-        fadeIn: "fadeIn 0.5s ease-in-out forwards",
-        slideIn: "slideIn 0.5s ease-out forwards",
-        pulse: "pulse 2s cubic-bezier(0.4, 0, 0.6, 1) infinite",
-        bounce: "bounce 1s infinite",
       },
     },
   },
