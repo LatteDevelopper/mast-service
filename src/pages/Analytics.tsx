@@ -146,7 +146,7 @@ const Analytics = () => {
         .select('*')
         .eq('visit_date', today)
         .eq('visit_hour', currentHour)
-        .single();
+        .maybeSingle(); // Changed from .single() to .maybeSingle()
 
       if (existingVisit) {
         await supabase
@@ -359,7 +359,7 @@ const Analytics = () => {
                 <tbody>
                   {leads.map((lead, index) => (
                     <tr key={index} className="border-b hover:bg-green-50/50 transition-colors">
-                      <td className="p-4">{new Date(lead.timestamp).toLocaleDateString()}</td>
+                      <td className="p-4">{new Date(lead.created_at).toLocaleDateString()}</td>
                       <td className="p-4 font-medium">{lead.name}</td>
                       <td className="p-4">{lead.phone}</td>
                       <td className="p-4">{lead.email || "-"}</td>
