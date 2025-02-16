@@ -173,27 +173,6 @@ const Analytics = () => {
   const clickThroughRate = Math.round((detailsClicks / totalVisitors) * 100) || 0;
   const bounceRate = Math.round((1 - (detailsClicks / totalVisitors)) * 100) || 0;
 
-  useEffect(() => {
-    const today = new Date().toLocaleDateString();
-    const hour = new Date().getHours().toString().padStart(2, '0');
-    
-    const visitorKey = `visitors_${today}`;
-    const hourlyKey = `visitors_hour_${hour}`;
-    
-    const currentDayVisitors = parseInt(localStorage.getItem(visitorKey) || "0");
-    const currentHourVisitors = parseInt(localStorage.getItem(hourlyKey) || "0");
-    
-    localStorage.setItem(visitorKey, (currentDayVisitors + 1).toString());
-    localStorage.setItem(hourlyKey, (currentHourVisitors + 1).toString());
-    
-    const newVisitorsCount = totalVisitors + 1;
-    setTotalVisitors(newVisitorsCount);
-    localStorage.setItem("totalVisitors", newVisitorsCount.toString());
-    
-    setChartData(getLastWeekData());
-    setHourlyData(getHourlyData());
-  }, []);
-
   return (
     <div className="min-h-screen bg-gradient-to-br from-green-50 via-white to-green-50/30 p-6">
       <div className="max-w-7xl mx-auto space-y-8">
