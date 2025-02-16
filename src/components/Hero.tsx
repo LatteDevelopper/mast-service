@@ -14,7 +14,7 @@ export const Hero = () => {
     const today = new Date().toLocaleDateString();
     const detailsKey = `details_${today}`;
     const currentDayClicks = parseInt(localStorage.getItem(detailsKey) || "0");
-    localStorage.setItem(detailsKey", (currentDayClicks + 1).toString());
+    localStorage.setItem(detailsKey, (currentDayClicks + 1).toString());
 
     toast.success("Спасибо за интерес! Мы свяжемся с вами в ближайшее время.", {
       position: "top-center",
