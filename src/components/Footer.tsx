@@ -36,9 +36,9 @@ export const Footer = () => {
                 <Phone size={18} />
                 <span>+7 (952) 900 03-70</span>
               </a>
-              <a href="mailto:info@mastservice.ru" className="flex items-center gap-2 text-green-100 hover:text-white transition-colors">
+              <a href="mailto:MastServiceBusiness@outlook.com" className="flex items-center gap-2 text-green-100 hover:text-white transition-colors">
                 <Mail size={18} />
-                <span>info@mastservice.ru</span>
+                <span>MastServiceBusiness@outlook.com</span>
               </a>
             </div>
           </div>
