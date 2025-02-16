@@ -20,7 +20,7 @@ export const Header = () => {
       <div className="container flex h-16 items-center justify-between">
         <button 
           onClick={scrollToTop} 
-          className="text-lg font-medium text-primary hover:text-primary-light transition-colors"
+          className="text-lg font-medium text-green-700 hover:text-green-600 transition-colors"
         >
           MastService
         </button>
@@ -28,26 +28,26 @@ export const Header = () => {
         <nav className="hidden md:flex items-center gap-6">
           <button 
             onClick={() => scrollToSection("services")} 
-            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            className="text-sm font-medium text-muted-foreground hover:text-green-700 transition-colors"
           >
             Услуги
           </button>
           <button 
             onClick={() => scrollToSection("portfolio")} 
-            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            className="text-sm font-medium text-muted-foreground hover:text-green-700 transition-colors"
           >
             Портфолио
           </button>
           <button 
             onClick={() => scrollToSection("contact")} 
-            className="text-sm font-medium text-muted-foreground hover:text-primary transition-colors"
+            className="text-sm font-medium text-muted-foreground hover:text-green-700 transition-colors"
           >
             Контакты
           </button>
         </nav>
 
         <div className="flex items-center">
-          <a href="tel:+79529000370" className="hidden md:flex items-center gap-2 text-sm font-medium text-primary">
+          <a href="tel:+79529000370" className="hidden md:flex items-center gap-2 text-sm font-medium text-green-700">
             <Phone size={18} />
             +7 (952) 900 03-70
           </a>
