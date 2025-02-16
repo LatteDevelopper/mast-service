@@ -27,24 +27,24 @@ const services = [
 
 export const Services = () => {
   return (
-    <section className="section-padding bg-slate-50" id="services">
+    <section className="section-padding bg-gradient-to-br from-green-50 to-white" id="services">
       <div className="max-w-7xl mx-auto space-y-12">
         <div className="text-center space-y-4">
-          <h2 className="text-3xl md:text-4xl font-bold">Наши услуги</h2>
-          <p className="text-muted-foreground max-w-2xl mx-auto">
+          <h2 className="text-3xl md:text-4xl font-bold text-green-800">Наши услуги</h2>
+          <p className="text-green-600 max-w-2xl mx-auto">
             Предоставляем полный спектр услуг по ремонту и отделке помещений
           </p>
         </div>
         
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
           {services.map((service, index) => (
-            <Card key={index} className="transition-all hover:shadow-lg">
+            <Card key={index} className="transition-all hover:shadow-lg border-green-100 hover:border-green-200">
               <CardHeader>
-                <div className="w-12 h-12 rounded-lg bg-primary/5 flex items-center justify-center mb-4">
-                  <service.icon className="w-6 h-6 text-primary" />
+                <div className="w-12 h-12 rounded-lg bg-green-50 flex items-center justify-center mb-4">
+                  <service.icon className="w-6 h-6 text-green-600" />
                 </div>
-                <CardTitle>{service.title}</CardTitle>
-                <CardDescription>{service.description}</CardDescription>
+                <CardTitle className="text-green-800">{service.title}</CardTitle>
+                <CardDescription className="text-green-600">{service.description}</CardDescription>
               </CardHeader>
             </Card>
           ))}
