@@ -46,18 +46,11 @@ export const Header = () => {
           </button>
         </nav>
 
-        <div className="flex items-center gap-4">
+        <div className="flex items-center">
           <a href="tel:+79529000370" className="hidden md:flex items-center gap-2 text-sm font-medium text-green-700">
             <Phone size={18} />
             +7 (952) 900 03-70
           </a>
-          <Button 
-            variant="outline" 
-            className="hidden md:inline-flex"
-            onClick={() => scrollToSection("contact")}
-          >
-            Заказать звонок
-          </Button>
         </div>
       </div>
     </header>
