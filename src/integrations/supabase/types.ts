@@ -9,7 +9,129 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
-      [_ in never]: never
+      analytics_leads: {
+        Row: {
+          created_at: string
+          email: string | null
+          id: string
+          message: string | null
+          name: string
+          phone: string
+        }
+        Insert: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          message?: string | null
+          name: string
+          phone: string
+        }
+        Update: {
+          created_at?: string
+          email?: string | null
+          id?: string
+          message?: string | null
+          name?: string
+          phone?: string
+        }
+        Relationships: []
+      }
+      analytics_services: {
+        Row: {
+          id: string
+          last_updated: string
+          service_name: string
+          views_count: number | null
+        }
+        Insert: {
+          id?: string
+          last_updated?: string
+          service_name: string
+          views_count?: number | null
+        }
+        Update: {
+          id?: string
+          last_updated?: string
+          service_name?: string
+          views_count?: number | null
+        }
+        Relationships: []
+      }
+      analytics_sessions: {
+        Row: {
+          bounce: boolean | null
+          created_at: string
+          id: string
+          session_duration: number | null
+          session_start: string
+        }
+        Insert: {
+          bounce?: boolean | null
+          created_at?: string
+          id?: string
+          session_duration?: number | null
+          session_start?: string
+        }
+        Update: {
+          bounce?: boolean | null
+          created_at?: string
+          id?: string
+          session_duration?: number | null
+          session_start?: string
+        }
+        Relationships: []
+      }
+      analytics_sources: {
+        Row: {
+          id: string
+          last_updated: string
+          source_name: string
+          visitors_count: number | null
+        }
+        Insert: {
+          id?: string
+          last_updated?: string
+          source_name: string
+          visitors_count?: number | null
+        }
+        Update: {
+          id?: string
+          last_updated?: string
+          source_name?: string
+          visitors_count?: number | null
+        }
+        Relationships: []
+      }
+      analytics_visitors: {
+        Row: {
+          contact_requests: number | null
+          created_at: string
+          details_clicks: number | null
+          id: string
+          visit_date: string
+          visit_hour: number
+          visitors_count: number | null
+        }
+        Insert: {
+          contact_requests?: number | null
+          created_at?: string
+          details_clicks?: number | null
+          id?: string
+          visit_date: string
+          visit_hour: number
+          visitors_count?: number | null
+        }
+        Update: {
+          contact_requests?: number | null
+          created_at?: string
+          details_clicks?: number | null
+          id?: string
+          visit_date?: string
+          visit_hour?: number
+          visitors_count?: number | null
+        }
+        Relationships: []
+      }
     }
     Views: {
       [_ in never]: never

@@ -2,102 +2,29 @@
 import { useEffect, useState } from "react";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { 
-  LineChart, 
-  Line, 
-  XAxis, 
-  YAxis, 
-  CartesianGrid, 
-  Tooltip, 
-  ResponsiveContainer,
-  AreaChart,
-  Area,
-  PieChart,
-  Pie,
-  Cell,
-  BarChart,
-  Bar,
-  Legend,
-  RadarChart,
-  Radar,
-  PolarGrid,
-  PolarAngleAxis,
-  PolarRadiusAxis
+  LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer,
+  AreaChart, Area, PieChart, Pie, Cell, RadarChart, Radar, PolarGrid,
+  PolarAngleAxis, PolarRadiusAxis, Legend
 } from "recharts";
 import { 
-  Users, 
-  MousePointer, 
-  PhoneCall, 
-  Mail, 
-  TrendingUp, 
-  ChartPieIcon,
-  Clock,
-  Calendar,
-  Activity,
-  Target
+  Users, Clock, Calendar, Activity, Target
 } from "lucide-react";
+import { supabase } from "@/integrations/supabase/client";
+import { StatCardProps, VisitorStats, HourlyStats, ServiceStats, SourceStats } from "@/types/analytics";
 
 const COLORS = ['#059669', '#065f46', '#047857', '#34d399', '#10b981'];
 
-const getLastWeekData = () => {
-  const data = [];
+const getLastWeekDates = () => {
+  const dates = [];
   for (let i = 6; i >= 0; i--) {
     const date = new Date();
     date.setDate(date.getDate() - i);
-    const dateStr = date.toLocaleDateString();
-    
-    const visitorKey = `visitors_${dateStr}`;
-    const detailsKey = `details_${dateStr}`;
-    const callsKey = `calls_${dateStr}`;
-    
-    data.push({
-      date: dateStr,
-      visitors: parseInt(localStorage.getItem(visitorKey) || "0"),
-      details: parseInt(localStorage.getItem(detailsKey) || "0"),
-      calls: parseInt(localStorage.getItem(callsKey) || "0"),
-    });
+    dates.push(date.toISOString().split('T')[0]);
   }
-  return data;
+  return dates;
 };
 
-const getHourlyData = () => {
-  const data = [];
-  for (let i = 0; i < 24; i++) {
-    const hour = i.toString().padStart(2, '0');
-    const visitorKey = `visitors_hour_${hour}`;
-    data.push({
-      hour: `${hour}:00`,
-      visitors: parseInt(localStorage.getItem(visitorKey) || "0"),
-    });
-  }
-  return data;
-};
-
-const getServiceData = () => {
-  return [
-    { name: 'Ремонт квартир', value: parseInt(localStorage.getItem('service_apartments') || "0") },
-    { name: 'Отделка помещений', value: parseInt(localStorage.getItem('service_finishing') || "0") },
-    { name: 'Ремонт офисов', value: parseInt(localStorage.getItem('service_offices') || "0") },
-    { name: 'Дизайн интерьера', value: parseInt(localStorage.getItem('service_design') || "0") },
-  ];
-};
-
-const getSourceData = () => {
-  return [
-    { subject: 'Поисковики', A: 80 },
-    { subject: 'Соцсети', A: 65 },
-    { subject: 'Реклама', A: 45 },
-    { subject: 'Рекомендации', A: 70 },
-    { subject: 'Прямые заходы', A: 55 },
-  ];
-};
-
-const StatCard = ({ title, value, icon: Icon, description, trend }: {
-  title: string;
-  value: number;
-  icon: any;
-  description: string;
-  trend?: number;
-}) => (
+const StatCard = ({ title, value, icon: Icon, description, trend }: StatCardProps) => (
   <Card className="hover:shadow-lg transition-shadow duration-300">
     <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
       <CardTitle className="text-sm font-medium">{title}</CardTitle>
@@ -117,36 +44,131 @@ const StatCard = ({ title, value, icon: Icon, description, trend }: {
   </Card>
 );
 
-interface Lead {
-  name: string;
-  phone: string;
-  email: string;
-  message: string;
-  timestamp: string;
-}
-
 const Analytics = () => {
-  const [totalVisitors, setTotalVisitors] = useState(() => 
-    parseInt(localStorage.getItem("totalVisitors") || "0")
-  );
-  const [detailsClicks, setDetailsClicks] = useState(() => 
-    parseInt(localStorage.getItem("detailsClicks") || "0")
-  );
-  const [contactRequests, setContactRequests] = useState(() => 
-    parseInt(localStorage.getItem("contactRequests") || "0")
-  );
-  const [avgTimeOnSite, setAvgTimeOnSite] = useState(() =>
-    parseInt(localStorage.getItem("avgTimeOnSite") || "180")
-  );
-  const [chartData, setChartData] = useState(getLastWeekData());
-  const [hourlyData, setHourlyData] = useState(getHourlyData());
-  const [serviceData, setServiceData] = useState(getServiceData());
-  const [sourceData] = useState(getSourceData());
-  
-  const [leads, setLeads] = useState<Lead[]>(() => {
-    const savedLeads = localStorage.getItem("leads");
-    return savedLeads ? JSON.parse(savedLeads) : [];
-  });
+  const [totalVisitors, setTotalVisitors] = useState(0);
+  const [detailsClicks, setDetailsClicks] = useState(0);
+  const [contactRequests, setContactRequests] = useState(0);
+  const [avgTimeOnSite] = useState(180); // This would need session tracking implementation
+  const [chartData, setChartData] = useState<VisitorStats[]>([]);
+  const [hourlyData, setHourlyData] = useState<HourlyStats[]>([]);
+  const [serviceData, setServiceData] = useState<ServiceStats[]>([]);
+  const [sourceData] = useState<SourceStats[]>([
+    { subject: 'Поисковики', A: 80 },
+    { subject: 'Соцсети', A: 65 },
+    { subject: 'Реклама', A: 45 },
+    { subject: 'Рекомендации', A: 70 },
+    { subject: 'Прямые заходы', A: 55 },
+  ]);
+  const [leads, setLeads] = useState<any[]>([]); // Using any[] temporarily since we don't have access to the Supabase types
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        // Fetch leads
+        const { data: leadsData } = await supabase
+          .from('analytics_leads')
+          .select('*')
+          .order('created_at', { ascending: false });
+        
+        if (leadsData) setLeads(leadsData);
+
+        // Fetch last week's visitor data
+        const lastWeekDates = getLastWeekDates();
+        const { data: visitorsData } = await supabase
+          .from('analytics_visitors')
+          .select('*')
+          .in('visit_date', lastWeekDates);
+
+        if (visitorsData) {
+          const processedData = lastWeekDates.map(date => {
+            const dayData = visitorsData.filter(v => v.visit_date === date);
+            return {
+              date,
+              visitors: dayData.reduce((sum, v) => sum + (v.visitors_count || 0), 0),
+              details: dayData.reduce((sum, v) => sum + (v.details_clicks || 0), 0),
+              calls: dayData.reduce((sum, v) => sum + (v.contact_requests || 0), 0),
+            };
+          });
+          setChartData(processedData);
+
+          // Calculate totals
+          const totals = visitorsData.reduce((acc, curr) => ({
+            visitors: acc.visitors + (curr.visitors_count || 0),
+            details: acc.details + (curr.details_clicks || 0),
+            contacts: acc.contacts + (curr.contact_requests || 0),
+          }), { visitors: 0, details: 0, contacts: 0 });
+
+          setTotalVisitors(totals.visitors);
+          setDetailsClicks(totals.details);
+          setContactRequests(totals.contacts);
+        }
+
+        // Fetch hourly data for today
+        const today = new Date().toISOString().split('T')[0];
+        const { data: todayData } = await supabase
+          .from('analytics_visitors')
+          .select('*')
+          .eq('visit_date', today);
+
+        if (todayData) {
+          const hourlyStats = Array.from({ length: 24 }, (_, i) => ({
+            hour: `${i.toString().padStart(2, '0')}:00`,
+            visitors: todayData.find(d => d.visit_hour === i)?.visitors_count || 0,
+          }));
+          setHourlyData(hourlyStats);
+        }
+
+        // Fetch service data
+        const { data: servicesData } = await supabase
+          .from('analytics_services')
+          .select('*');
+
+        if (servicesData) {
+          setServiceData(servicesData.map(service => ({
+            name: service.service_name,
+            value: service.views_count || 0,
+          })));
+        }
+
+      } catch (error) {
+        console.error('Error fetching analytics data:', error);
+      }
+    };
+
+    fetchData();
+
+    // Track current visit
+    const trackVisit = async () => {
+      const today = new Date().toISOString().split('T')[0];
+      const currentHour = new Date().getHours();
+
+      const { data: existingVisit } = await supabase
+        .from('analytics_visitors')
+        .select('*')
+        .eq('visit_date', today)
+        .eq('visit_hour', currentHour)
+        .single();
+
+      if (existingVisit) {
+        await supabase
+          .from('analytics_visitors')
+          .update({ 
+            visitors_count: (existingVisit.visitors_count || 0) + 1 
+          })
+          .eq('id', existingVisit.id);
+      } else {
+        await supabase
+          .from('analytics_visitors')
+          .insert([{
+            visit_date: today,
+            visit_hour: currentHour,
+            visitors_count: 1
+          }]);
+      }
+    };
+
+    trackVisit();
+  }, []);
 
   const conversionRate = Math.round((contactRequests / totalVisitors) * 100) || 0;
   const clickThroughRate = Math.round((detailsClicks / totalVisitors) * 100) || 0;
